@@ -1,6 +1,7 @@
 #include "r.h"
 
 extern int hollerith;
+extern int uppercase;
 
 char	outbuf[80];
 int	outp	= 0;
@@ -20,7 +21,7 @@ outdon() {
 
 putcom(s) char *s; {
 	if (printcom) {
-		ptc('c');
+		ptc(uppercase? 'C' : 'c');
 		outtab();
 		pts(s);
 		outdon();
@@ -29,17 +30,20 @@ putcom(s) char *s; {
 
 outcode(xp) char *xp; {
 	register c, c1, j;
-	char *q, *p;
+	char *q, *p, *s;
 
 	p = (char *) xp;	/* shut lint up */
 	if (cont == 0 && comptr > 0)	/* flush comment if not on continuation */
 		flushcom();
 	while( (c = *p++) ){
 		c1 = *p;
-		if (type[c] == LET || type[c] == DIG) {
+		if (isalpha(c) || isdigit(c)) {
+			if (uppercase)
+				foldup(p-1);
 			pts(p-1);
 			break;
 		}
+		s = NULL;	/* generally set to something like .ge. */
 		switch(c){
 
 		case '"': case '\'':
@@ -53,7 +57,7 @@ outcode(xp) char *xp; {
 				contcard();
 			if (hollerith) {
 				outnum(--j);
-				ptc('h');
+				ptc(uppercase ? 'H' : 'h');
 			} else
 				ptc(c);
 			while (*p != c) {
@@ -82,39 +86,39 @@ outcode(xp) char *xp; {
 			break;
 		case '>':
 			if( c1=='=' ){
-				pts(".ge."); p++;
+				s = ".ge."; p++;
 			} else
-				pts(".gt.");
+				s = ".gt.";
 			break;
 		case '<':
 			if( c1=='=' ){
-				pts(".le."); p++;
+				s = ".le."; p++;
 			} else if( c1=='>' ){
-				pts(".ne."); p++;
+				s = ".ne."; p++;
 			} else
-				pts(".lt.");
+				s = ".lt.";
 			break;
 		case '=':
 			if( c1=='=' ){
-				pts(".eq."); p++;
+				s = ".eq."; p++;
 			} else
-				ptc('=');
+				s = "=";
 			break;
 		case '!': case '^':
 			if( c1=='=' ){
-				pts(".ne."); p++;
+				s = ".ne."; p++;
 			} else
-				pts(".not.");
+				s = ".not.";
 			break;
 		case '&':
 			if( c1=='&' )
 				p++;
-			pts(".and.");
+			s = ".and.";
 			break;
 		case '|':
 			if( c1=='|' )
 				p++;
-			pts(".or.");
+			s = ".or.";
 			break;
 		case '\t':
 			outtab();
@@ -126,6 +130,21 @@ outcode(xp) char *xp; {
 			ptc(c);
 			break;
 		}
+		if (s != NULL) {
+			if (uppercase)
+				foldup(s);
+			pts(s);
+		}
+	}
+}
+
+foldup(s)	/* convert s to upper case */
+char *s;
+{
+	while (*s) {
+		if (islower(*s))
+			*s = toupper(*s);
+		s++;
 	}
 }
 

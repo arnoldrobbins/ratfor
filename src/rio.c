@@ -3,34 +3,36 @@
 char	ibuf[BUFSIZE];
 char	*ip = ibuf;
 
-char	type[] {
-	0,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,
-	CRAP,	'\t',	'\n',	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,
-	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,
-	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,	CRAP,
-	' ',	'!',	'"',	'#',	'$',	'%',	'&',	'\'',
-	'(',	')',	'*',	'+',	',',	'-',	'.',	'/',
-	DIG,	DIG,	DIG,	DIG,	DIG,	DIG,	DIG,	DIG,
-	DIG,	DIG,	':',	';',	'<',	'=',	'>',	'?',
-	'@',	LET,	LET,	LET,	LET,	LET,	LET,	LET,
-	LET,	LET,	LET,	LET,	LET,	LET,	LET,	LET,
-	LET,	LET,	LET,	LET,	LET,	LET,	LET,	LET,
-	LET,	LET,	LET,	'[',	'\\',	']',	'^',	'_',
-	'`',	LET,	LET,	LET,	LET,	LET,	LET,	LET,
-	LET,	LET,	LET,	LET,	LET,	LET,	LET,	LET,
-	LET,	LET,	LET,	LET,	LET,	LET,	LET,	LET,
-	LET,	LET,	LET,	'{',	'|',	'}',	'~',	0,
-};
 
 gtok(s) char *s; {	/* get token into s */
-	register c, t;
+	register c;
 	register char *p;
 	struct nlist *q;
 
 	for(;;) {
 		p = s;
 		*p++ = c = getchr();
-		switch(t = type[c]) {
+		if (isalpha(c) || isdigit(c)) {
+			while (isalpha(*p = getchr()) || isdigit(*p))
+				p++;
+			putbak(*p);
+			*p = '\0';
+			if ((q = lookup(s))->name != NULL && q->ydef == 0) {	/* found but not keyword */
+				if (q->def != fcnloc && q->def != FCN1loc) {	/* not "function" */
+					pbstr(q->def);
+					continue;
+				}
+				getfname();	/* recursive gtok */
+			}
+			for (p=s; *p; p++)
+				if (isupper(*p))
+					*p = tolower(*p);
+			for (p=s; *p; p++)
+				if (!isdigit(*p))
+					return(LET);
+			return(DIG);
+		}
+		switch(c) {
 		case 0:
 			if (infptr > 0) {
 				fclose(infile[infptr]);
@@ -40,12 +42,14 @@ gtok(s) char *s; {	/* get token into s */
 			if (svargc > 1) {
 				svargc--;
 				svargv++;
-				if (infile[infptr] != stdin)
-					fclose(infile[infptr]);
-				if( (infile[infptr] = fopen(*svargv,"r")) == NULL )
+				if (infile[0] != stdin)
+					fclose(infile[0]);
+				if (!strcmp(*svargv, "-"))
+					infile[0] = stdin;
+				else if( (infile[0] = fopen(*svargv,"r")) == NULL )
 					cant(*svargv);
-				linect[infptr] = 0;
-				curfile[infptr] = *svargv;
+				linect[0] = 0;
+				curfile[0] = *svargv;
 				continue;
 			}
 			return(EOF);	/* real eof */
@@ -76,26 +80,6 @@ gtok(s) char *s; {	/* get token into s */
 			else if (c != '\n')
 				putbak(c);
 			continue;
-		case LET:
-		case DIG:
-			while ((t=type[*p = getchr()]) == LET || t == DIG)
-				p++;
-			putbak(*p);
-			*p = '\0';
-			if ((q = lookup(s))->name != NULL && q->ydef == 0) {	/* found but not keyword */
-				if (q->def != fcnloc) {	/* not "function" */
-					pbstr(q->def);
-					continue;
-				}
-				getfname();	/* recursive gtok */
-			}
-			for (p=s; *p; p++)
-				if (*p>='A' && *p<='Z')
-					*p += 'a' - 'A';
-			for (p=s; *p; p++)
-				if (*p < '0' || *p > '9')
-					return(LET);
-			return(DIG);
 		case '[':
 			*p = '\0';
 			return('{');
@@ -148,9 +132,10 @@ gtok(s) char *s; {	/* get token into s */
 			return(peek(p, '&'));
 		case '|':
 			return(peek(p, '|'));
-		case CRAP:
-			continue;
 		default:
+			if (!isprint(c))
+				continue;
+		case '\n':
 			*p = '\0';
 			return(*s);
 		}

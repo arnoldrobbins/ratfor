@@ -37,6 +37,7 @@ int keytran[] = {
 	0};
 
 char	*fcnloc;	/* spot for "function" */
+char	*FCN1loc;	/* spot for "FUNCTION"; kludge */
 
 int	svargc;
 char	**svargv;
@@ -49,43 +50,66 @@ int	linect[10];
 int	contfld	= CONTFLD;	/* place to put continuation char */
 int	printcom	= 0;	/* print comments if on */
 int	hollerith	= 0;	/* convert "..." to 27H... if on */
+int	uppercase	= 0;	/* produce output in upper case (except for "...") */
 
+#ifndef unix
+#define OPTION(L)	(tolower(i) == tolower(L))
+#else
+#define OPTION(L)	(i == L)
+#endif
 #ifdef	gcos
-char	*ratfor	"tssrat";
-int	bcdrat[2];
-char	*bwkmeter	".           bwkmeter    ";
-int	bcdbwk[5];
+#define BIT(n)	(1 << 36 - 1 - n)
+#define FORTRAN	BIT(1)
+#define FDS	BIT(4)
+#define EXEC	BIT(5)
+#define FORM	BIT(14)
+#define LNO	BIT(15)
+#define BCD	BIT(16)
+#define OPTZ	BIT(17)
+int	compile	= FORTRAN | FDS;
+#define GCOSOPT()	if (OPTION('O')) compile |= OPTZ; \
+			else if (i == '6') compile |= FORM; \
+			else if (OPTION('R')) compile = 0
+#else
+#define GCOSOPT()
+#define ffiler(S)	"can't open"
 #endif
 
 main(argc,argv) int argc; char **argv; {
 	int i;
-	while(argc>1 && argv[1][0]=='-') {
-		if(argv[1][1]=='6') {
-			contfld=6;
+	while(argc>1 && argv[1][0]=='-' && (i = argv[1][1]) != '\0') {
+		if (isdigit(i)) {
+			contfld = i - '0';
 			if (argv[1][2]!='\0')
 				contchar = argv[1][2];
-		} else if (argv[1][1] == 'C')
+		} else if (OPTION('C'))
 			printcom++;
-		else if (argv[1][1] == 'h')
+		else if (OPTION('h'))
 			hollerith++;
+		else if (OPTION('u') && (argv[1][2] == 'c' || argv[1][2] == 'C'))
+			uppercase++;
+		GCOSOPT();
 		argc--;
 		argv++;
 	}
 
 #ifdef	gcos
 	if (!intss()) {
-		_fixup();
-		ratfor = "batrat";
-	}
-	ascbcd(ratfor,bcdrat,6);
-	ascbcd(bwkmeter,bcdbwk,24);
-	acdata(bcdrat[0],1);
-	acupdt(bcdbwk[0]);
-	if (!intss()) {
-		if ((infile[infptr]=fopen("s*", "r")) == NULL)
-			cant("s*");
-		if ((outfil=fopen("*s", "w")) == NULL)
-			cant("*s");
+		fputs("\t\t    Version 2.1 : read INFO/RATFOR (07/13/79)\n", stderr);
+		if (compile) {
+			static char name[80] = "s*", opts[20] = "yw";
+			char *opt = (char *)inquire(stdout, _OPTIONS);
+			if (!strchr(opt, 't')) { /* if stdout is diverted */
+				sprintf(name, "%s\"s*\"",  (char *)inquire(stdout, _FILENAME));
+				strcpy(&opts[1], opt);
+			}
+			if (freopen(name, opts, stdout) == NULL)
+				cant(name);
+		}
+	} else {
+		compile = 0;
+		if (argc < 2 && inquire(stdin, _TTY))
+			freopen("*src", "rt", stdin);
 	}
 #endif
 
@@ -96,42 +120,34 @@ main(argc,argv) int argc; char **argv; {
 	for (i=0; keyword[i]; i++)
 		install(keyword[i], "", keytran[i]);
 	fcnloc = install("function", "", 0);
+	FCN1loc = install("FUNCTION", "", 0);
 	yyparse();
 #ifdef	gcos
-	if (!intss())
-		bexit(errorflag);
+	if (compile) {
+		if (errorflag) { /* abort */
+			cretsw(EXEC);
+		} else { /* good: call forty */
+			FILE *dstar; /* to intercept "gosys" action */
+
+			if ((dstar = fopen("d*", "wv")) == NULL)
+				cant("d*");
+			fputs("$\tforty\tascii", dstar);
+			if (fopen("*1", "o") == NULL)
+				cant("*1");
+			fclose(stdout, "rl");
+			cretsw(FORM | LNO | BCD);
+			csetsw(compile);
+			gosys("forty");
+		}
+	}
 #endif
 	exit(errorflag);
 }
 
-#ifdef gcos
-bexit(status) {
-	/* this is the batch version of exit for gcos tss */
-	FILE *inf, *outf;
-	char c;
-
-	fclose(stderr);	/* make sure diagnostics get flushed */
-	if (status) /* abort */
-		_nogud();
-
-	/* good: copy output back to s*, call forty */
-
-	fclose(outfil,"r");
-	fclose(infile[0],"r");
-	inf = fopen("*s", "r");
-	outf = fopen("s*", "w");
-	while ((c=getc(inf)) != EOF)
-		putc(c, outf);
-	fclose(inf,"r");
-	fclose(outf,"r");
-	__imok();
-}
-#endif
-
 cant(s) char *s; {
 	linect[infptr] = 0;
 	curfile[infptr] = s;
-	error("can't open");
+	error(ffiler(""));
 	exit(1);
 }
 
@@ -207,7 +223,7 @@ defstat() {
 		putbak(c);
 	}
 	for (nstr=0; c=getchr(); nstr++) {
-		if (type[c] != LET && type[c] != DIG)
+		if (!isalpha(c) && !isdigit(c))
 			break;
 		str[nstr] = c;
 	}

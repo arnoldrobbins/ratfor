@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <ctype.h>
 #include "y.tab.h"
 
 #
@@ -7,19 +8,13 @@
 
 #define	LET	1
 #define	DIG	2
-#define	CRAP	3
 #define	COMMENT	'#'
 #define	QUOTE	'"'
 
 extern int	transfer;
 
 #define	INDENT	3	/* indent delta */
-#ifdef	gcos
-#define	CONTFLD	6
-#endif
-#ifdef	unix
-#define	CONTFLD	1
-#endif
+#define	CONTFLD	6	/* default position of continuation character */
 extern	int	contfld;	/* column for continuation char */
 extern	int	contchar;
 extern	int	dbg;
@@ -60,5 +55,5 @@ struct nlist	*lookup();
 char	*install();
 char	*malloc();
 extern	char	*fcnloc;
+extern	char	*FCN1loc;
 
-extern	char	type[];

@@ -5,7 +5,7 @@
 
 int	transfer	= 0;	/* 1 if just finished retrun, break, next */
 
-char	fcname[10];
+char	fcname[200];
 char	scrat[500];
 
 int	brkptr	= -1;
@@ -300,10 +300,6 @@ dostat(p1) int p1; {
 		outcont(p1+1);
 	brkptr--;
 }
-
-#ifdef	gcos
-#define	atoi(s)	(*s-'0')	/* crude!!! */
-#endif
 
 breakcode() {
 	int level, t;

@@ -62,7 +62,7 @@ getcase() {
 }
 
 getdefault() {
-	char token[20];
+	char token[200];
 	if (gnbtok(token) != ':')
 		error("Missing colon after default");
 	outgoto(swexit[swlevel]);
