@@ -3,6 +3,10 @@
 	* r1.c, r.g, r.h: Updated.
 	* old.a: Save old files, just in case.
 
+1986-11-10         Brian W. Kernighan     <bwk@research.bell-labs.com>
+
+	* makefile: Updated.
+
 1985-06-29         Brian W. Kernighan     <research!bwk>
 
 	* makefile: Updated.
