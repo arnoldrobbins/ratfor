@@ -1,5 +1,5 @@
 #include "r.h"
-#define	BUFSIZE	512
+#define	BUFSIZE	5120
 char	ibuf[BUFSIZE];
 char	*ip = ibuf;
 

@@ -51,29 +51,7 @@ int	contfld	= CONTFLD;	/* place to put continuation char */
 int	printcom	= 0;	/* print comments if on */
 int	hollerith	= 0;	/* convert "..." to 27H... if on */
 int	uppercase	= 0;	/* produce output in upper case (except for "...") */
-
-#ifndef unix
-#define OPTION(L)	(tolower(i) == tolower(L))
-#else
-#define OPTION(L)	(i == L)
-#endif
-#ifdef	gcos
-#define BIT(n)	(1 << 36 - 1 - n)
-#define FORTRAN	BIT(1)
-#define FDS	BIT(4)
-#define EXEC	BIT(5)
-#define FORM	BIT(14)
-#define LNO	BIT(15)
-#define BCD	BIT(16)
-#define OPTZ	BIT(17)
-int	compile	= FORTRAN | FDS;
-#define GCOSOPT()	if (OPTION('O')) compile |= OPTZ; \
-			else if (i == '6') compile |= FORM; \
-			else if (OPTION('R')) compile = 0
-#else
-#define GCOSOPT()
-#define ffiler(S)	"can't open"
-#endif
+int	f77		= 0;	/* output in fortran 77 (if-then-else-endif) */
 
 main(argc,argv) int argc; char **argv; {
 	int i;
@@ -82,36 +60,20 @@ main(argc,argv) int argc; char **argv; {
 			contfld = i - '0';
 			if (argv[1][2]!='\0')
 				contchar = argv[1][2];
-		} else if (OPTION('C'))
+		} else if (i == 'C')
 			printcom++;
-		else if (OPTION('h'))
+		else if (i == 'h')
 			hollerith++;
-		else if (OPTION('u') && (argv[1][2] == 'c' || argv[1][2] == 'C'))
+		else if (i == 'u' && (argv[1][2] == 'c' || argv[1][2] == 'C'))
 			uppercase++;
-		GCOSOPT();
+		else if (strcmp(argv[1], "-f77") == 0)
+			f77 = 1;
+		else if (strcmp(argv[1], "-f66") == 0)
+			f77 = 0;
 		argc--;
 		argv++;
 	}
 
-#ifdef	gcos
-	if (!intss()) {
-		fputs("\t\t    Version 2.1 : read INFO/RATFOR (07/13/79)\n", stderr);
-		if (compile) {
-			static char name[80] = "s*", opts[20] = "yw";
-			char *opt = (char *)inquire(stdout, _OPTIONS);
-			if (!strchr(opt, 't')) { /* if stdout is diverted */
-				sprintf(name, "%s\"s*\"",  (char *)inquire(stdout, _FILENAME));
-				strcpy(&opts[1], opt);
-			}
-			if (freopen(name, opts, stdout) == NULL)
-				cant(name);
-		}
-	} else {
-		compile = 0;
-		if (argc < 2 && inquire(stdin, _TTY))
-			freopen("*src", "rt", stdin);
-	}
-#endif
 
 	svargc = argc;
 	svargv = argv;
@@ -122,32 +84,13 @@ main(argc,argv) int argc; char **argv; {
 	fcnloc = install("function", "", 0);
 	FCN1loc = install("FUNCTION", "", 0);
 	yyparse();
-#ifdef	gcos
-	if (compile) {
-		if (errorflag) { /* abort */
-			cretsw(EXEC);
-		} else { /* good: call forty */
-			FILE *dstar; /* to intercept "gosys" action */
-
-			if ((dstar = fopen("d*", "wv")) == NULL)
-				cant("d*");
-			fputs("$\tforty\tascii", dstar);
-			if (fopen("*1", "o") == NULL)
-				cant("*1");
-			fclose(stdout, "rl");
-			cretsw(FORM | LNO | BCD);
-			csetsw(compile);
-			gosys("forty");
-		}
-	}
-#endif
 	exit(errorflag);
 }
 
 cant(s) char *s; {
 	linect[infptr] = 0;
 	curfile[infptr] = s;
-	error(ffiler(""));
+	error("can't open");
 	exit(1);
 }
 
@@ -175,7 +118,7 @@ inclstat() {
 	curfile[infptr] = fname;
 }
 
-char	str[500];
+char	str[5000];
 int	nstr;
 
 yylex() {

@@ -1,9 +1,13 @@
+1990-05-07         Brian W. Kernighan     <bwk@research.bell-labs.com>
+
+	* rio.c, rlex.c: Updated.
+
 1989-01-28         Brian W. Kernighan     <bwk@research.bell-labs.com>
 
 	* r1.c, r.g, r.h: Updated.
 	* old.a: Save old files, just in case.
 
-1986-11-10         Brian W. Kernighan     <bwk@research.bell-labs.com>
+1986-11-10         Brian W. Kernighan     <research!bwk>
 
 	* makefile: Updated.
 
