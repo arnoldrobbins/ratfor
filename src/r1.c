@@ -9,12 +9,12 @@ char	fcname[200];
 char	scrat[500];
 
 int	brkptr	= -1;
-int	brkstk[10];	/* break label */
-int	typestk[10];	/* type of loop construct */
-int	brkused[10];	/* loop contains BREAK or NEXT */
+int	brkstk[50];	/* break label */
+int	typestk[50];	/* type of loop construct */
+int	brkused[50];	/* loop contains BREAK or NEXT */
 
 int	forptr	= 0;
-char	*forstk[10];
+char	*forstk[50];
 
 repcode() {
 	transfer = 0;
@@ -47,19 +47,39 @@ untils(p1,un) int p1,un; {
 ifcode() {
 	transfer = 0;
 	outtab();
-	outcode("if(.not.");
-	balpar();
-	outcode(")");
-	outgoto(yyval=genlab(2));
+	if (f77) {
+		outtab();
+		outcode("if");
+		balpar();
+		outcode("then");
+		outdon();
+	} else {
+		outcode("if(.not.");
+		balpar();
+		outcode(")");
+		outgoto(yyval=genlab(2));
+	}
 	indent++;
 }
 
 elsecode(p1) {
-	outgoto(p1+1);
-	indent--;
-	putcom("else");
-	indent++;
-	outcont(p1);
+	if (f77) {
+		outtab();
+		outcode("else");
+		outdon();
+	} else {
+		outgoto(p1+1);
+		indent--;
+		putcom("else");
+		indent++;
+		outcont(p1);
+	}
+}
+
+endif(s) char *s; {
+	outtab();
+	outcode("endif");
+	outdon();
 }
 
 whilecode() {

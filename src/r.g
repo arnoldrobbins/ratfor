@@ -1,6 +1,7 @@
 %{
 extern int transfer;
 extern	int	indent;
+extern	int	f77;
 %}
 
 %term	IF ELSE FOR WHILE BREAK NEXT 
@@ -14,8 +15,8 @@ extern	int	indent;
 statl	: statl  stat
 	|
 	;
-stat	: if stat	={ indent--; outcont($1); }
-	| ifelse stat	={ indent--; outcont($1+1); }
+stat	: if stat	={ indent--; if (f77) endif(); else outcont($1); }
+	| ifelse stat	={ indent--; if (f77) endif(); else outcont($1+1); }
 	| switch fullcase '}'	={ endsw($1, $2); }
 	| while stat	={ whilestat($1); }
 	| for stat	={ forstat($1); }

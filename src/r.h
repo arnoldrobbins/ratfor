@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 #include "y.tab.h"
 
 #
@@ -22,6 +23,7 @@ extern	int	yyval;
 extern	int	*yypv;
 extern	int	yylval;
 extern	int	errorflag;
+extern	int	f77;
 
 extern	char	comment[];	/* save input comments here */
 extern	int	comptr;	/* next free slot in comment */
