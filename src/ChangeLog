@@ -1,3 +1,7 @@
+1985-06-29         Brian W. Kernighan     <research!bwk>
+
+	* makefile: Updated.
+
 1982-01-30         Brian W. Kernighan     <research!bwk>
 
 	* r.h, r0.c, r1.c, r2.c, rio.c, rlex.c: Updated.
