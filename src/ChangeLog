@@ -1,6 +1,7 @@
 1989-01-28         Brian W. Kernighan     <bwk@research.bell-labs.com>
 
 	* r1.c, r.g, r.h: Updated.
+	* old.a: Save old files, just in case.
 
 1985-06-29         Brian W. Kernighan     <research!bwk>
 
