@@ -1,3 +1,8 @@
+1979-01-10         Brian W. Kernighan     <research!bwk>
+
+	* rat: Removed.
+	* m0, m1, m2, m3, m4, m5, m9, m99, m.mac: New files.
+
 1975-06-27         Brian W. Kernighan     <research!bwk>
 
 	* rat: New file.

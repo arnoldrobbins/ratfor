@@ -1,40 +1,66 @@
-%term	LCURL RCURL LPAR RPAR SCOL DIGITS
-%term	XIF XELSE XFOR XWHILE XBREAK NEXT 
-%term	OLDDO NEWDO
-%term	XGOK XDEFINE XINCLUDE
+%{
+extern int transfer;
+extern	int	indent;
+%}
+
+%term	IF ELSE FOR WHILE BREAK NEXT 
+%term	DIGITS DO
+%term	GOK DEFINE INCLUDE
 %term	REPEAT UNTIL
+%term	RETURN
+%term	SWITCH CASE DEFAULT
 %%
 
 statl	: statl  stat
 	|
 	;
-stat	: if stat	={ outcont($1); }
-	| ifelse stat	={ outcont($1+1); }
+stat	: if stat	={ indent--; outcont($1); }
+	| ifelse stat	={ indent--; outcont($1+1); }
+	| switch fullcase '}'	={ endsw($1, $2); }
 	| while stat	={ whilestat($1); }
 	| for stat	={ forstat($1); }
-	| repeat stat UNTIL	={ untils($1); }
-	| XBREAK	={ breakcode($1); }
-	| NEXT		={ nextcode($1); }
-	| newdo stat	={ dostat($1); }
-	| OLDDO		={ docode(0,$1); }
-	| XGOK		={ gokcode($1); }
-	| SCOL
-	| LCURL statl RCURL
+	| repeat stat UNTIL	={ untils($1,1); }
+	| repeat stat		={ untils($1,0); }
+	| BREAK	={ breakcode(); }
+	| NEXT		={ nextcode(); }
+	| do stat	={ dostat($1); }
+	| GOK		={ gokcode($1); }
+	| RETURN	={ retcode(); }
+	| ';'
+	| '{' statl '}'
 	| label stat
-	| error		={ errcode($1); yyclearin; }
+	| error		={ errcode(); yyclearin; }
 	;
-label	: DIGITS	={ outcode($1); outcode("\t"); }
+switch	: sw '{'
 	;
-if	: XIF		={ ifcode($1); }
+sw	: SWITCH	={ swcode(); }
 	;
-ifelse	: if stat XELSE	={ outgoto($1+1); outcont($1); }
+fullcase: caselist	={ $$ = 0; }
+	| caselist defpart	={ $$ = 1; }
 	;
-while	: XWHILE	={ whilecode($1); }
+caselist: casepart
+	| caselist casepart
 	;
-for	: XFOR		={ forcode($1); }
+defpart	: default statl
 	;
-repeat	: REPEAT	={ repcode($1); }
+default	: DEFAULT	={ getdefault(); }
 	;
-newdo	: NEWDO		={ docode(1,$1); }
+casepart: case statl
+	;
+case	: CASE	={ getcase(); }
+	;
+label	: DIGITS	={ transfer = 0; outcode($1); }
+	;
+if	: IF		={ ifcode(); }
+	;
+ifelse	: if stat ELSE	={ elsecode($1); }
+	;
+while	: WHILE	={ whilecode(); }
+	;
+for	: FOR		={ forcode(); }
+	;
+repeat	: REPEAT	={ repcode(); }
+	;
+do	: DO		={ docode(); }
 	;
 %%

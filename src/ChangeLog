@@ -1,3 +1,9 @@
+1979-01-10         Brian W. Kernighan     <research!bwk>
+
+	* lex.c, run: Removed.
+	* makefile, r0.c, rio.c, rlex.c, rlook.c: New files.
+	* r1.c, r2.c, r.g, r.h: Updated.
+
 1975-07-18         Brian W. Kernighan     <research!bwk>
 
 	* run: New file.
