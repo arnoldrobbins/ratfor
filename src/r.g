@@ -15,53 +15,53 @@ extern	int	f77;
 statl	: statl  stat
 	|
 	;
-stat	: if stat	={ indent--; if (f77) endif(); else outcont($1); }
-	| ifelse stat	={ indent--; if (f77) endif(); else outcont($1+1); }
-	| switch fullcase '}'	={ endsw($1, $2); }
-	| while stat	={ whilestat($1); }
-	| for stat	={ forstat($1); }
-	| repeat stat UNTIL	={ untils($1,1); }
-	| repeat stat		={ untils($1,0); }
-	| BREAK	={ breakcode(); }
-	| NEXT		={ nextcode(); }
-	| do stat	={ dostat($1); }
-	| GOK		={ gokcode($1); }
-	| RETURN	={ retcode(); }
+stat	: if stat	{ indent--; if (f77) endif(); else outcont($1); }
+	| ifelse stat	{ indent--; if (f77) endif(); else outcont($1+1); }
+	| switch fullcase '}'	{ endsw($1, $2); }
+	| while stat	{ whilestat($1); }
+	| for stat	{ forstat($1); }
+	| repeat stat UNTIL	{ untils($1,1); }
+	| repeat stat		{ untils($1,0); }
+	| BREAK	{ breakcode(); }
+	| NEXT		{ nextcode(); }
+	| do stat	{ dostat($1); }
+	| GOK		{ gokcode($1); }
+	| RETURN	{ retcode(); }
 	| ';'
 	| '{' statl '}'
 	| label stat
-	| error		={ errcode(); yyclearin; }
+	| error		{ errcode(); yyclearin; }
 	;
 switch	: sw '{'
 	;
-sw	: SWITCH	={ swcode(); }
+sw	: SWITCH	{ swcode(); }
 	;
-fullcase: caselist	={ $$ = 0; }
-	| caselist defpart	={ $$ = 1; }
+fullcase: caselist	{ $$ = 0; }
+	| caselist defpart	{ $$ = 1; }
 	;
 caselist: casepart
 	| caselist casepart
 	;
 defpart	: default statl
 	;
-default	: DEFAULT	={ getdefault(); }
+default	: DEFAULT	{ getdefault(); }
 	;
 casepart: case statl
 	;
-case	: CASE	={ getcase(); }
+case	: CASE	{ getcase(); }
 	;
-label	: DIGITS	={ transfer = 0; outcode($1); }
+label	: DIGITS	{ transfer = 0; outcode($1); }
 	;
-if	: IF		={ ifcode(); }
+if	: IF		{ ifcode(); }
 	;
-ifelse	: if stat ELSE	={ elsecode($1); }
+ifelse	: if stat ELSE	{ elsecode($1); }
 	;
-while	: WHILE	={ whilecode(); }
+while	: WHILE	{ whilecode(); }
 	;
-for	: FOR		={ forcode(); }
+for	: FOR		{ forcode(); }
 	;
-repeat	: REPEAT	={ repcode(); }
+repeat	: REPEAT	{ repcode(); }
 	;
-do	: DO		={ docode(); }
+do	: DO		{ docode(); }
 	;
 %%

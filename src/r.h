@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include "y.tab.h"
 
 #
@@ -23,11 +25,11 @@ extern	int	yyval;
 extern	int	*yypv;
 extern	int	yylval;
 extern	int	errorflag;
-extern	int	f77;
+extern	bool	f77;
 
 extern	char	comment[];	/* save input comments here */
 extern	int	comptr;	/* next free slot in comment */
-extern	int	printcom;	/* print comments, etc., if on */
+extern	bool	printcom;	/* print comments, etc., if on */
 extern	int	indent;	/* level of nesting for indenting */
 
 extern	char	ibuf[];
@@ -55,7 +57,10 @@ struct	nlist {
 
 struct nlist	*lookup();
 char	*install();
-char	*malloc();
 extern	char	*fcnloc;
 extern	char	*FCN1loc;
 
+extern void cant(const char *s);
+extern void inclstat(void);
+extern void defstat(void);
+extern int yyparse(void);

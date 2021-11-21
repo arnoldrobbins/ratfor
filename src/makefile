@@ -9,9 +9,9 @@ rio.o:	r.h y.tab.h rio.c
 rlook.o:	r.h y.tab.h rlook.c
 rlex.o:	r.h y.tab.h rlex.c
 y.tab.c:	r.g
-	yacc -d r.g
+	byacc -d r.g
 y.tab.h:	r.g
-	yacc -d r.g
+	byacc -d r.g
 
 list:
 	pr r.g r.h r*.c makefile TODO

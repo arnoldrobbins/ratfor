@@ -1,3 +1,19 @@
+2021-11-21         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* makefile: Use byacc instead of yacc. Bison doesn't quite
+	cut it.
+	* r.g: Remove '=' in front of actions.
+	* r.h: Add include of <stdlib.h> and <stdbool.h>.
+	(f77, printcom): Declare as 'bool'.
+	(malloc): Remove declaration.
+	(cant, inclstat, defstat, yyparse): Add declarations.
+	* rlex.c (outfil, infil): Initialize at run time in main().
+	(f77, printcom, hollerith, uppercase): Declare as 'bool'.
+	(main, cant, inclstat, defstat, yylex, yyerror): Move to
+	ANSI-style definition.
+	(dbg): Removed, wasn't used.
+	General: Clean up spacing of operators.
+
 1990-05-07         Brian W. Kernighan     <bwk@research.bell-labs.com>
 
 	* rio.c, rlex.c: Updated.
