@@ -1,3 +1,21 @@
+2021-11-26         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* makefile: Remove use of -ly in final link, not needed.
+	* r.h (balpar, breakcode, docode, dostat, eatup, elsecode,
+	endif, endsw, errcode, error, forcode, forstat, genlab,
+	getcase, getchr, getdefault, gnbtok, gokcode, gtok, ifcode,
+	nextcode, nonblank, outcode, outcont, outdon, outgoto, outnum,
+	outtab, pbstr, putcom, repcode, swcode, untils, whilecode,
+	whilestat): Add declarations.
+	* r0.c, rio.c: Convert function declarations to ANSI style.
+	* r1.c: Convert function declarations to ANSI style.
+	Clean up operator formatting.
+	* rlook.c: Include standard headers and convert function
+	declarations to ANSI style.
+	(copy): Removed.
+	(lookup): Use strcmp instead of inline comparison.
+	(install): Use strdup instead of old copy routine.
+
 2021-11-21         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* makefile: Use byacc instead of yacc. Bison doesn't quite

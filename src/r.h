@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include "y.tab.h"
 
-#
 #define	putbak(c)	*ip++ = c
 /*	#define	getchr()	(ip>ibuf?*--ip: getc(infile[infptr]))	*/
 
@@ -60,7 +59,43 @@ char	*install();
 extern	char	*fcnloc;
 extern	char	*FCN1loc;
 
-extern void cant(const char *s);
+extern void cant(char *s);
 extern void inclstat(void);
 extern void defstat(void);
 extern int yyparse(void);
+extern void swcode(void);
+extern void getcase(void);
+extern void putcom(char *s);
+extern void error(char *s1);
+extern int genlab(int n);
+extern void outcode(char *xp);
+extern void outnum(int n);
+extern void balpar(void);
+extern void outdon(void);
+extern void outgoto(int n);
+extern void outcont(int n);
+extern int gtok(char *s);
+extern void getdefault(void);
+extern int gnbtok(char *s);
+extern void endsw(int n, int def);
+extern void repcode(void);
+extern void untils(int p1, int un);
+extern void outtab(void);
+extern void ifcode(void);
+extern void elsecode(int p1);
+extern void endif(char *s);
+extern void whilecode(void);
+extern void whilestat(int p1);
+extern void pbstr(char *str);
+extern void gokcode(char *p1);
+extern int eatup(void);
+extern void forcode(void);
+extern void forstat(int p1);
+extern void retcode(void);
+extern bool nonblank(char *s);
+extern void docode(void);
+extern void dostat(int p1);
+extern void breakcode(void);
+extern void nextcode(void);
+extern void errcode(void);
+extern int getchr(void);

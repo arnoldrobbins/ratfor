@@ -1,7 +1,7 @@
 #include "r.h"
 
-#define	wasbreak	brkused[brkptr]==1 || brkused[brkptr]==3
-#define	wasnext	brkused[brkptr]==2 || brkused[brkptr]==3
+#define	wasbreak	brkused[brkptr] == 1 || brkused[brkptr] == 3
+#define	wasnext	brkused[brkptr] == 2 || brkused[brkptr] == 3
 
 int	transfer	= 0;	/* 1 if just finished retrun, break, next */
 
@@ -16,7 +16,9 @@ int	brkused[50];	/* loop contains BREAK or NEXT */
 int	forptr	= 0;
 char	*forstk[50];
 
-repcode() {
+void
+repcode(void)
+{
 	transfer = 0;
 	outcont(0);
 	putcom("repeat");
@@ -28,7 +30,9 @@ repcode() {
 	brkused[brkptr] = 0;
 }
 
-untils(p1,un) int p1,un; {
+void
+untils(int p1, int un)
+{
 	outnum(p1+1);
 	outtab();
 	if (un > 0) {
@@ -44,7 +48,9 @@ untils(p1,un) int p1,un; {
 	brkptr--;
 }
 
-ifcode() {
+void
+ifcode(void)
+{
 	transfer = 0;
 	outtab();
 	if (f77) {
@@ -57,12 +63,14 @@ ifcode() {
 		outcode("if(.not.");
 		balpar();
 		outcode(")");
-		outgoto(yyval=genlab(2));
+		outgoto(yyval = genlab(2));
 	}
 	indent++;
 }
 
-elsecode(p1) {
+void
+elsecode(int p1)
+{
 	if (f77) {
 		outtab();
 		outcode("else");
@@ -76,13 +84,17 @@ elsecode(p1) {
 	}
 }
 
-endif(s) char *s; {
+void
+endif(char *s)
+{
 	outtab();
 	outcode("endif");
 	outdon();
 }
 
-whilecode() {
+void
+whilecode(void)
+{
 	transfer = 0;
 	outcont(0);
 	putcom("while");
@@ -98,7 +110,9 @@ whilecode() {
 	indent++;
 }
 
-whilestat(p1) int p1; {
+void
+whilestat(int p1)
+{
 	outgoto(p1);
 	indent--;
 	putcom("endwhile");
@@ -106,9 +120,12 @@ whilestat(p1) int p1; {
 	brkptr--;
 }
 
-balpar() {
-	register c, lpar;
-	while ((c=gtok(scrat)) == ' ' || c == '\t')
+void
+balpar(void)
+{
+	int c, lpar;
+
+	while ((c = gtok(scrat)) == ' ' || c == '\t')
 		;
 	if (c != '(') {
 		error("missing left paren");
@@ -118,16 +135,16 @@ balpar() {
 	lpar = 1;
 	do {
 		c = gtok(scrat);
-		if (c==';' || c=='{' || c=='}' || c==EOF) {
+		if (c == ';' || c == '{' || c == '}' || c == EOF) {
 			pbstr(scrat);
 			break;
 		}
-		if (c=='(')
+		if (c == '(')
 			lpar++;
-		else if (c==')')
+		else if (c == ')')
 			lpar--;
 		else if (c == '\n') {
-			while ((c = gtok(scrat)) == ' ' || c=='\t' || c=='\n')
+			while ((c = gtok(scrat)) == ' ' || c == '\t' || c == '\n')
 				;
 			pbstr(scrat);
 			continue;
@@ -142,12 +159,16 @@ balpar() {
 
 int	labval	= 23000;
 
-genlab(n){
+int
+genlab(int n)
+{
 	labval += n;
-	return(labval-n);
+	return(labval - n);
 }
 
-gokcode(p1) {
+void
+gokcode(char *p1)
+{
 	transfer = 0;
 	outtab();
 	outcode(p1);
@@ -155,9 +176,12 @@ gokcode(p1) {
 	outdon();
 }
 
-eatup() {
+int
+eatup(void)
+{
 	int t, lpar;
 	char temp[100];
+
 	lpar = 0;
 	do {
 		if ((t = gtok(scrat)) == ';' || t == '\n')
@@ -174,7 +198,7 @@ eatup() {
 		}
 		if (t == '(')
 			lpar++;
-		else if (t==')') {
+		else if (t == ')') {
 			lpar--;
 			if (lpar < 0) {
 				error("missing left paren");
@@ -190,7 +214,9 @@ eatup() {
 	return(0);
 }
 
-forcode(){
+void
+forcode(void)
+{
 	int lpar, t;
 	char *ps, *qs;
 
@@ -223,7 +249,7 @@ forcode(){
 		outnum(yyval);
 		outtab();
 		outcode("if(.not.(");
-		for (lpar=0; lpar >= 0;) {
+		for (lpar = 0; lpar >= 0;) {
 			if ((t = gnbtok(scrat)) == ';')
 				break;
 			if (t == '(')
@@ -244,7 +270,7 @@ forcode(){
 			error("invalid FOR clause");
 	}
 	ps = scrat;
-	for (lpar=0; lpar >= 0;) {
+	for (lpar = 0; lpar >= 0;) {
 		if ((t = gtok(ps)) == '(')
 			lpar++;
 		else if (t == ')')
@@ -261,7 +287,9 @@ forcode(){
 	indent++;
 }
 
-forstat(p1) int p1; {
+void
+forstat(int p1)
+{
 	char *bp, *q;
 	bp = forstk[--forptr];
 	if (wasnext)
@@ -276,13 +304,16 @@ forstat(p1) int p1; {
 	indent--;
 	putcom("endfor");
 	outcont(p1+2);
-	for (q=bp; *q++;);
+	for (q = bp; *q++;);
 	free(bp);
 	brkptr--;
 }
 
-retcode() {
-	register c;
+void
+retcode(void)
+{
+	int c;
+
 	if ((c = gnbtok(scrat)) != '\n' && c != ';' && c != '}') {
 		pbstr(scrat);
 		outtab();
@@ -299,7 +330,9 @@ retcode() {
 	transfer = 1;
 }
 
-docode() {
+void
+docode(void)
+{
 	transfer = 0;
 	outtab();
 	outcode("do ");
@@ -313,7 +346,9 @@ docode() {
 	indent++;
 }
 
-dostat(p1) int p1; {
+void
+dostat(int p1)
+{
 	outcont(p1);
 	indent--;
 	if (wasbreak)
@@ -321,11 +356,13 @@ dostat(p1) int p1; {
 	brkptr--;
 }
 
-breakcode() {
+void
+breakcode(void)
+{
 	int level, t;
 
 	level = 0;
-	if ((t=gnbtok(scrat)) == DIG)
+	if ((t = gnbtok(scrat)) == DIG)
 		level = atoi(scrat) - 1;
 	else if (t != ';')
 		pbstr(scrat);
@@ -338,11 +375,13 @@ breakcode() {
 	transfer = 1;
 }
 
-nextcode() {
+void
+nextcode(void)
+{
 	int level, t;
 
 	level = 0;
-	if ((t=gnbtok(scrat)) == DIG)
+	if ((t = gnbtok(scrat)) == DIG)
 		level = atoi(scrat) - 1;
 	else if (t != ';')
 		pbstr(scrat);
@@ -355,32 +394,39 @@ nextcode() {
 	transfer = 1;
 }
 
-nonblank(s) char *s; {
+bool
+nonblank(char *s)
+{
 	int c;
 	while (c = *s++)
-		if (c!=' ' && c!='\t' && c!='\n')
-			return(1);
-	return(0);
+		if (c != ' ' && c != '\t' && c != '\n')
+			return true;
+	return false;
 }
 
 int	errorflag	= 0;
 
-error(s1) char *s1; {
+void
+error(char *s1)
+{
 	if (errorflag == 0)
 		fprintf(stderr, "ratfor:");
-	fprintf(stderr, "error at line %d, file %s: ",linect[infptr],curfile[infptr]);
-	fprintf(stderr, s1);
+	fprintf(stderr, "error at line %d, file %s: ", linect[infptr], curfile[infptr]);
+	fprintf(stderr, "%s", s1);
 	fprintf(stderr, "\n");
 	errorflag = 1;
 }
 
-errcode() {
+void
+errcode(void)
+{
 	int c;
+
 	if (errorflag == 0)
 		fprintf(stderr, "******\n");
 	fprintf(stderr, "*****F ratfor:");
 	fprintf(stderr, "syntax error, line %d, file %s\n", linect[infptr], curfile[infptr]);
-	while ((c=getchr())!=';' && c!='}' && c!='\n' && c!=EOF && c!='\0')
+	while ((c = getchr()) != ';' && c != '}' && c != '\n' && c != EOF && c != '\0')
 		;
 	if (c == EOF || c == '\0')
 		putbak(c);

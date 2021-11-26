@@ -4,9 +4,11 @@ char	ibuf[BUFSIZE];
 char	*ip = ibuf;
 
 
-gtok(s) char *s; {	/* get token into s */
-	register c;
-	register char *p;
+int
+gtok(char *s)	/* get token into s */
+{
+	int c;
+	char *p;
 	struct nlist *q;
 
 	for(;;) {
@@ -142,8 +144,11 @@ gtok(s) char *s; {	/* get token into s */
 	}
 }
 
-gnbtok(s) char *s; {
-	register c;
+int
+gnbtok(char *s)
+{
+	int c;
+
 	while ((c = gtok(s)) == ' ' || c == '\t')
 		;
 	return(c);
@@ -157,7 +162,7 @@ getfname() {
 }
 
 peek(p, c1) char *p, c1; {
-	register c;
+	int c;
 	c = *(p-1);
 	if ((*p = getchr()) == c1)
 		p++;
@@ -167,10 +172,10 @@ peek(p, c1) char *p, c1; {
 	return(c);
 }
 
-pbstr(str)
-register char *str;
+void
+pbstr(char *str)
 {
-	register char *p;
+	char *p;
 
 	p = str;
 	while (*p++);
@@ -183,8 +188,10 @@ register char *str;
 		putbak(*--p);
 }
 
-getchr() {
-	register c;
+int
+getchr(void)
+{
+	int c;
 
 	if (ip > ibuf)
 		return(*--ip);

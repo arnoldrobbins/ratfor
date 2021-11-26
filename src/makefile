@@ -1,6 +1,6 @@
 CFLAGS = -g
 a.out:	r0.o r1.o r2.o rio.o rlook.o rlex.o y.tab.o
-	cc r*.o y.tab.o -ly
+	cc r*.o y.tab.o
 
 r0.o:	r.h y.tab.h r0.c
 r1.o:	r.h y.tab.h r1.c

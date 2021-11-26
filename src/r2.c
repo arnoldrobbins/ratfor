@@ -12,14 +12,18 @@ char	comment[320];
 int	comptr	= 0;
 int	indent	= 0;
 
-outdon() {
+void
+outdon(void)
+{
 	outbuf[outp] = '\0';
 	if (outp > 0)
 		fprintf(outfil, "%s\n", outbuf);
 	outp = cont = 0;
 }
 
-putcom(s) char *s; {
+void
+putcom(char *s)
+{
 	if (printcom) {
 		ptc(uppercase? 'C' : 'c');
 		outtab();
@@ -28,8 +32,10 @@ putcom(s) char *s; {
 	}
 }
 
-outcode(xp) char *xp; {
-	register c, c1, j;
+void
+outcode(char *xp)
+{
+	int c, c1, j;
 	char *q, *p, *s;
 
 	p = (char *) xp;	/* shut lint up */
@@ -177,25 +183,33 @@ contcard(){
 		error("more than 19 continuation cards");
 }
 
-outtab(){
+void
+outtab(void)
+{
 	int n;
+
 	n = 6;
 	if (printcom) {
 		n += INDENT * indent;
-		if (n > 35) n = 35;
+		if (n > 35)
+			n = 35;
 	}
 	while (outp < n)
 		ptc(' ');
 }
 
-outnum(n) int n; {
+void
+outnum(int n)
+{
 	int a;
 	if( a = n/10 )
 		outnum(a);
 	ptc(n%10 + '0');
 }
 
-outcont(n) int n; {
+void
+outcont(int n)
+{
 	transfer = 0;
 	if (n == 0 && outp == 0)
 		return;
@@ -205,7 +219,9 @@ outcont(n) int n; {
 	outdon();
 }
 
-outgoto(n) int n; {
+void
+outgoto(int n)
+{
 	if (transfer != 0)
 		return;
 	outcode("\tgoto ");

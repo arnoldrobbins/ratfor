@@ -93,7 +93,7 @@ main(int argc, char **argv)
 }
 
 void
-cant(const char *s)
+cant(char *s)
 {
 	linect[infptr] = 0;
 	curfile[infptr] = s;

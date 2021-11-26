@@ -4,7 +4,9 @@ int	swlevel	= -1;
 int	swexit[5];
 int	nextcase[5];
 
-swcode() {
+void
+swcode(void)
+{
 	transfer = 0;
 	putcom("switch");
 	swlevel++;
@@ -20,7 +22,9 @@ swcode() {
 	indent++;
 }
 
-getcase() {
+void
+getcase(void)
+{
 	int t, lpar;
 	char token[100];
 
@@ -36,7 +40,7 @@ getcase() {
 		outcode(".eq.(");
 		lpar = 0;
 		do {
-			if ((t=gtok(token)) == ':')
+			if ((t = gtok(token)) == ':')
 				break;
 			if (t == '(')
 				lpar++;
@@ -61,8 +65,11 @@ getcase() {
 	indent++;
 }
 
-getdefault() {
+void
+getdefault(void)
+{
 	char token[200];
+
 	if (gnbtok(token) != ':')
 		error("Missing colon after default");
 	outgoto(swexit[swlevel]);
@@ -72,7 +79,9 @@ getdefault() {
 	indent++;
 }
 
-endsw(n, def) {
+void
+endsw(int n, int def)
+{
 	if (def == 0)
 		outcont(nextcase[swlevel]);
 	swlevel--;
