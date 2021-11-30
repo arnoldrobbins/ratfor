@@ -60,6 +60,32 @@ include filename
 .I Ratfor
 is best used with
 .IR f77 (1).
+.SH OPTIONS
+.I Ratfor
+supports the following options:
+.TP
+\fB\-c \fIN\fR[\fIc\fR]
+Set the continuation column to
+.IR N .
+If supplied, set the continuation character to
+.IR c .
+.TP
+.B \-C
+Pass comments through to the generated Fortran.
+.TP
+.PD 0
+.B \-f66
+.TP
+.PD
+.B \-f77
+Set the dialect of generated code to either Fortran 66 or Fortran 77.
+The default is Fortan 66.
+.TP
+.B \-h
+Use Hollerith notation for string constants.
+.TP
+.B \-u
+Generate the code using UPPERCASE characters. The default is lowercase.
 .SH "SEE ALSO"
 .IR efl (1), 
 .IR f77 (1), 

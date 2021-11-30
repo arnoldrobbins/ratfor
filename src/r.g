@@ -1,7 +1,5 @@
 %{
-extern int transfer;
-extern	int	indent;
-extern	int	f77;
+#include "r.h"
 %}
 
 %term	IF ELSE FOR WHILE BREAK NEXT 

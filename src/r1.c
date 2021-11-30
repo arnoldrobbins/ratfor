@@ -85,7 +85,7 @@ elsecode(int p1)
 }
 
 void
-endif(char *s)
+endif(void)
 {
 	outtab();
 	outcode("endif");
@@ -276,7 +276,7 @@ forcode(void)
 		else if (t == ')')
 			lpar--;
 		if (lpar >= 0 && t != '\n')
-			while(*ps)
+			while (*ps)
 				ps++;
 	}
 	*ps = '\0';
@@ -303,8 +303,9 @@ forstat(int p1)
 	outgoto(p1);
 	indent--;
 	putcom("endfor");
-	outcont(p1+2);
-	for (q = bp; *q++;);
+	outcont(p1 + 2);
+	for (q = bp; *q++;)
+		continue;
 	free(bp);
 	brkptr--;
 }

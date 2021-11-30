@@ -1,3 +1,8 @@
+2021-11-30         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* ratfor.1: Add OPTIONS section in anticipation of moving
+	to getopt(3).
+
 1986-08-06         Brian W. Kernighan     <research!bwk>
 
 	* ratfor.1: Updated.

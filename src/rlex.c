@@ -53,6 +53,13 @@ bool	hollerith	= false;	/* convert "..." to 27H... if on */
 bool	uppercase	= false;	/* produce output in upper case (except for "...") */
 bool	f77		= false;	/* output in fortran 77 (if-then-else-endif) */
 
+static void
+usage(const char *name)
+{
+	fprintf(stderr, "usage: %s [-c N[c]] [-Chu] [-f 66|77] [file ...]\n", name);
+	exit(EXIT_FAILURE);
+}
+
 int
 main(int argc, char **argv)
 {
@@ -60,10 +67,10 @@ main(int argc, char **argv)
 
 	outfil = stdout;
 	infile[0] = stdin;
-	while(argc > 1 && argv[1][0] == '-' && (i = argv[1][1]) != '\0') {
+	while (argc > 1 && argv[1][0] == '-' && (i = argv[1][1]) != '\0') {
 		if (isdigit(i)) {
 			contfld = i - '0';
-			if (argv[1][2]!='\0')
+			if (argv[1][2] != '\0')
 				contchar = argv[1][2];
 		} else if (i == 'C')
 			printcom = true;
@@ -75,6 +82,8 @@ main(int argc, char **argv)
 			f77 = true;
 		else if (strcmp(argv[1], "-f66") == 0)
 			f77 = false;
+		else
+			usage(argv[0]);
 		argc--;
 		argv++;
 	}
@@ -89,7 +98,8 @@ main(int argc, char **argv)
 	fcnloc = install("function", "", 0);
 	FCN1loc = install("FUNCTION", "", 0);
 	yyparse();
-	exit(errorflag);
+
+	return errorflag;
 }
 
 void
@@ -136,7 +146,7 @@ char	str[5000];
 int	nstr;
 
 int
-yylex()
+yylex(void)
 {
 	int c, t;
 
@@ -163,9 +173,14 @@ yylex()
 	}
 }
 
-int
+void
 yyerror(const char *p)
 {
+	// ADR: The original code has this as an empty function.
+	// I'm not sure why.  Let's try printing the error and
+	// see what breaks.
+	fprintf(stderr, "%s\n", p);
+	fflush(stderr);
 }
 
 

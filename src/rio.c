@@ -11,7 +11,7 @@ gtok(char *s)	/* get token into s */
 	char *p;
 	struct nlist *q;
 
-	for(;;) {
+	for (;;) {
 		p = s;
 		*p++ = c = getchr();
 		if (isalpha(c) || isdigit(c)) {
@@ -154,15 +154,20 @@ gnbtok(char *s)
 	return(c);
 }
 
-getfname() {
+void
+getfname(void)
+{
 	while (gtok(fcname) == ' ')
 		;
 	pbstr(fcname);
 	putbak(' ');
 }
 
-peek(p, c1) char *p, c1; {
+int
+peek(char *p, char c1)
+{
 	int c;
+
 	c = *(p-1);
 	if ((*p = getchr()) == c1)
 		p++;
@@ -178,7 +183,8 @@ pbstr(char *str)
 	char *p;
 
 	p = str;
-	while (*p++);
+	while (*p++)
+		continue;
 	--p;
 	if (ip >= &ibuf[BUFSIZE]) {
 		error("pushback overflow");

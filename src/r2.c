@@ -1,8 +1,5 @@
 #include "r.h"
 
-extern int hollerith;
-extern int uppercase;
-
 char	outbuf[80];
 int	outp	= 0;
 int	cont	= 0;
@@ -41,7 +38,7 @@ outcode(char *xp)
 	p = (char *) xp;	/* shut lint up */
 	if (cont == 0 && comptr > 0)	/* flush comment if not on continuation */
 		flushcom();
-	while( (c = *p++) ){
+	while ((c = *p++) != '\0') {
 		c1 = *p;
 		if (isalpha(c) || isdigit(c)) {
 			if (uppercase)
@@ -50,16 +47,16 @@ outcode(char *xp)
 			break;
 		}
 		s = NULL;	/* generally set to something like .ge. */
-		switch(c){
-
-		case '"': case '\'':
+		switch(c) {
+		case '"':
+		case '\'':
 			j = 0;
-			for (q=p; *q; q++) {
+			for (q = p; *q; q++) {
 				if (*q == '\\')
 					q++;
 				j++;
 			}
-			if (outp+j+2 > 71)
+			if (outp + j + 2 > 71)
 				contcard();
 			if (hollerith) {
 				outnum(--j);
@@ -75,7 +72,8 @@ outcode(char *xp)
 				ptc(c);
 			p++;
 			break;
-		case '$': case '\\':
+		case '$':
+		case '\\':
 			if (strlen(p-1)+outp > 71)
 				contcard();
 			if (c1 == '"' || c1 == '\'') {
@@ -91,38 +89,43 @@ outcode(char *xp)
 				ptc(*p++);
 			break;
 		case '>':
-			if( c1=='=' ){
-				s = ".ge."; p++;
+			if (c1 == '=') {
+				s = ".ge.";
+				p++;
 			} else
 				s = ".gt.";
 			break;
 		case '<':
-			if( c1=='=' ){
-				s = ".le."; p++;
-			} else if( c1=='>' ){
-				s = ".ne."; p++;
+			if (c1 == '=') {
+				s = ".le.";
+				p++;
+			} else if (c1 == '>') {
+				s = ".ne.";
+				p++;
 			} else
 				s = ".lt.";
 			break;
 		case '=':
-			if( c1=='=' ){
-				s = ".eq."; p++;
+			if (c1 == '=') {
+				s = ".eq.";
+				p++;
 			} else
 				s = "=";
 			break;
 		case '!': case '^':
-			if( c1=='=' ){
-				s = ".ne."; p++;
+			if (c1 == '=') {
+				s = ".ne.";
+				p++;
 			} else
 				s = ".not.";
 			break;
 		case '&':
-			if( c1=='&' )
+			if (c1 == '&')
 				p++;
 			s = ".and.";
 			break;
 		case '|':
-			if( c1=='|' )
+			if (c1 == '|')
 				p++;
 			s = ".or.";
 			break;
@@ -144,8 +147,8 @@ outcode(char *xp)
 	}
 }
 
-foldup(s)	/* convert s to upper case */
-char *s;
+void
+foldup(char *s)		/* convert s to upper case */
 {
 	while (*s) {
 		if (islower(*s))
@@ -154,20 +157,26 @@ char *s;
 	}
 }
 
-ptc(c) char c; {
-	if( outp > 71 )
+void
+ptc(char c)
+{
+	if (outp > 71)
 		contcard();
 	outbuf[outp++] = c;
 }
 
-pts(s) char *s; {
+void
+pts(char *s)
+{
 	if (strlen(s)+outp > 71)
 		contcard();
-	while(*s)
+	while (*s)
 		ptc(*s++);
 }
 
-contcard(){
+void
+contcard(void)
+{
 	int n;
 	outbuf[outp] = '\0';
 	fprintf(outfil, "%s\n", outbuf);
@@ -176,7 +185,8 @@ contcard(){
 		n += INDENT * indent + 1;
 		if (n > 35) n = 35;
 	}
-	for( outp=0; outp<n; outbuf[outp++] = ' ' );
+	for (outp = 0; outp < n; outbuf[outp++] = ' ')
+		continue;
 	outbuf[contfld-1] = contchar;
 	cont++;
 	if (cont > 19)
@@ -202,7 +212,7 @@ void
 outnum(int n)
 {
 	int a;
-	if( a = n/10 )
+	if ((a = n/10) != 0)
 		outnum(a);
 	ptc(n%10 + '0');
 }
@@ -213,7 +223,7 @@ outcont(int n)
 	transfer = 0;
 	if (n == 0 && outp == 0)
 		return;
-	if( n > 0 )
+	if (n > 0)
 		outnum(n);
 	outcode("\tcontinue");
 	outdon();
@@ -229,12 +239,14 @@ outgoto(int n)
 	outdon();
 }
 
-flushcom() {
+void
+flushcom(void)
+{
 	int i, j;
 	if (printcom == 0)
 		comptr = 0;
 	else if (cont == 0 && comptr > 0) {
-		for (i=j=0; i < comptr; i++)
+		for (i = j = 0; i < comptr; i++)
 			if (comment[i] == '\n') {
 				comment[i] = '\0';
 				fprintf(outfil, "%s\n", &comment[j]);

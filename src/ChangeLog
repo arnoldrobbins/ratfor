@@ -1,3 +1,20 @@
+2021-11-30         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* r.g: Include r.h instead of supplying declarations.
+	* r.h (dbg, yypv): Remove unused extern declarations.
+	(contcard, flushcom, foldup, getfname, hollerith,
+	peek, ptc, pts, uppercase, yyerror, yylex): Add declarations.
+	(endif): Adjust declaration.
+	* r1.c (endif): Adjust definition.
+	* r2.c (hollerith, uppercase): Remove extern declarations.
+	(foldup, ptc, pts, contcard, flushcom): Move to ANSI style
+	function definitions.
+	* rio.c (getfname, peek): Ditto.
+	* rlex.c (usage): New function.
+	(main): Add call to it.
+	(yylex): Move to ANSI style definition.
+	(yyerror): Change return type to void, add code.
+
 2021-11-26         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* makefile: Remove use of -ly in final link, not needed.
@@ -7,7 +24,7 @@
 	nextcode, nonblank, outcode, outcont, outdon, outgoto, outnum,
 	outtab, pbstr, putcom, repcode, swcode, untils, whilecode,
 	whilestat): Add declarations.
-	* r0.c, rio.c: Convert function declarations to ANSI style.
+	* r0.c, rio.c: Convert function definitions to ANSI style.
 	* r1.c: Convert function declarations to ANSI style.
 	Clean up operator formatting.
 	* rlook.c: Include standard headers and convert function
