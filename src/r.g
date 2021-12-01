@@ -2,12 +2,28 @@
 #include "r.h"
 %}
 
+%union {
+	int token;
+	char *strval;
+}
+
 %term	IF ELSE FOR WHILE BREAK NEXT 
-%term	DIGITS DO
-%term	GOK DEFINE INCLUDE
+%term	DO
+%term	DEFINE INCLUDE
 %term	REPEAT UNTIL
 %term	RETURN
 %term	SWITCH CASE DEFAULT
+%term	GOK DIGITS 
+
+%type <token>	IF ELSE FOR WHILE BREAK NEXT 
+%type <token>	DO
+%type <token>	DEFINE INCLUDE
+%type <token>	REPEAT UNTIL
+%type <token>	RETURN
+%type <token>	SWITCH CASE DEFAULT
+%type <strval>	GOK DIGITS 
+
+%type <token>	if ifelse switch while for repeat do fullcase
 %%
 
 statl	: statl  stat

@@ -1,3 +1,20 @@
+2021-12-01         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* r.g: Use %union for a real type for YYSTYPE. Add %type statements
+	for all terminals and relevant non-terminals.
+	* r.h: Add include of <getopt.h>. Sort the list of extern declarations.
+	(yylval): Remove declaration.
+	(yyval): Declare as YYSTYPE.
+	(EOS, HSHSIZ): Remove, they were not used.
+	(foldup): Change return type to char *.
+	* r0.c, r1.c: Adjust use of yyval as a union.
+	* r2.c (foldup): Return char * and use strdup() to get a string
+	to turn into uppercase.
+	(outcode): Adjust usage and free returned pointer if necessary.
+	* rlex.c (set_continuation): New function.
+	(main): Switch to using getopt(3) for option parsing.
+	(yylex): Adjust use of yylval as a union.
+
 2021-11-30         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* r.g: Include r.h instead of supplying declarations.

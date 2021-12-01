@@ -22,10 +22,10 @@ repcode(void)
 	transfer = 0;
 	outcont(0);
 	putcom("repeat");
-	yyval = genlab(3);
+	yyval.token = genlab(3);
 	indent++;
-	outcont(yyval);
-	brkstk[++brkptr] = yyval+1;
+	outcont(yyval.token);
+	brkstk[++brkptr] = yyval.token+1;
 	typestk[brkptr] = REPEAT;
 	brkused[brkptr] = 0;
 }
@@ -63,7 +63,7 @@ ifcode(void)
 		outcode("if(.not.");
 		balpar();
 		outcode(")");
-		outgoto(yyval = genlab(2));
+		outgoto(yyval.token = genlab(2));
 	}
 	indent++;
 }
@@ -98,15 +98,15 @@ whilecode(void)
 	transfer = 0;
 	outcont(0);
 	putcom("while");
-	brkstk[++brkptr] = yyval = genlab(2);
+	brkstk[++brkptr] = yyval.token = genlab(2);
 	typestk[brkptr] = WHILE;
 	brkused[brkptr] = 0;
-	outnum(yyval);
+	outnum(yyval.token);
 	outtab();
 	outcode("if(.not.");
 	balpar();
 	outcode(")");
-	outgoto(yyval+1);
+	outgoto(yyval.token+1);
 	indent++;
 }
 
@@ -223,8 +223,8 @@ forcode(void)
 	transfer = 0;
 	outcont(0);
 	putcom("for");
-	yyval = genlab(3);
-	brkstk[++brkptr] = yyval+1;
+	yyval.token = genlab(3);
+	brkstk[++brkptr] = yyval.token+1;
 	typestk[brkptr] = FOR;
 	brkused[brkptr] = 0;
 	forstk[forptr++] = malloc(1);
@@ -243,10 +243,10 @@ forcode(void)
 		outdon();
 	}
 	if (gnbtok(scrat) == ';')	/* empty condition */
-		outcont(yyval);
+		outcont(yyval.token);
 	else {	/* non-empty condition */
 		pbstr(scrat);
-		outnum(yyval);
+		outnum(yyval.token);
 		outtab();
 		outcode("if(.not.(");
 		for (lpar = 0; lpar >= 0;) {
@@ -265,7 +265,7 @@ forcode(void)
 				outcode(scrat);
 		}
 		outcode("))");
-		outgoto(yyval+2);
+		outgoto(yyval.token+2);
 		if (lpar < 0)
 			error("invalid FOR clause");
 	}
@@ -337,11 +337,11 @@ docode(void)
 	transfer = 0;
 	outtab();
 	outcode("do ");
-	yyval = genlab(2);
-	brkstk[++brkptr] = yyval;
+	yyval.token = genlab(2);
+	brkstk[++brkptr] = yyval.token;
 	typestk[brkptr] = DO;
 	brkused[brkptr] = 0;
-	outnum(yyval);
+	outnum(yyval.token);
 	eatup();
 	outdon();
 	indent++;

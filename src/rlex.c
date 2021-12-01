@@ -60,37 +60,60 @@ usage(const char *name)
 	exit(EXIT_FAILURE);
 }
 
+static void
+set_continuation(const char *str)
+{
+	const char *cp;
+
+	if (! isdigit(*str))
+		return;		// leave contfld and contchar at their defaults
+
+	for (contfld = 0, cp = str; *cp != '\0'; cp++) {
+		if (! isdigit(*cp))
+			break;
+		contfld = (contfld * 10) + (*cp - '0');
+	}
+
+	if (*cp != '\0')
+		contchar = *cp;
+}
+
 int
 main(int argc, char **argv)
 {
-	int i;
+	int i, c;
 
 	outfil = stdout;
 	infile[0] = stdin;
-	while (argc > 1 && argv[1][0] == '-' && (i = argv[1][1]) != '\0') {
-		if (isdigit(i)) {
-			contfld = i - '0';
-			if (argv[1][2] != '\0')
-				contchar = argv[1][2];
-		} else if (i == 'C')
+
+	while ((c = getopt(argc, argv, "+c:Cf:hu")) != -1) {
+		switch (c) {
+		case 'c':
+			set_continuation(optarg);
+			break;
+		case 'C':
 			printcom = true;
-		else if (i == 'h')
+			break;
+		case 'f':
+			f77 = (strcmp(optarg, "77") == 0);
+			break;
+		case 'h':
 			hollerith = true;
-		else if (i == 'u' && (argv[1][2] == 'c' || argv[1][2] == 'C'))
+			break;
+		case 'u':
 			uppercase = true;
-		else if (strcmp(argv[1], "-f77") == 0)
-			f77 = true;
-		else if (strcmp(argv[1], "-f66") == 0)
-			f77 = false;
-		else
+			break;
+		default:
 			usage(argv[0]);
-		argc--;
-		argv++;
+			;
+		}
+		//argc--;
+		//argv++;
 	}
 
+	svargc = argc - (optind - 1);
+	svargv = argv + (optind - 1);
 
-	svargc = argc;
-	svargv = argv;
 	if (svargc > 1)
 		putbak('\0');
 	for (i = 0; keyword[i] != NULL; i++)
@@ -153,12 +176,12 @@ yylex(void)
 	for (;;) {
 		while ((c = gtok(str)) == ' ' || c == '\n' || c == '\t')
 			continue;
-		yylval = c;
+		yylval.token = c;
 		if (c == ';' || c == '{' || c == '}')
 			return(c);
 		if (c == EOF)
 			return 0;
-		yylval = (int) str;
+		yylval.strval = str;
 		if (c == DIG)
 			return DIGITS;
 		t = lookup(str)->ydef;

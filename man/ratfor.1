@@ -15,11 +15,11 @@ converts a rational dialect of Fortran into ordinary irrational Fortran.
 .I Ratfor
 provides control flow constructs essentially identical to those in C:
 .TP
-statement grouping:
+\(bu Statement grouping:
 .nf
 { statement; statement; statement }
 .TP
-decision-making:
+\(bu Decision-making:
 if (condition) statement [ else statement ]
 .br
 switch (integer value) {
@@ -28,7 +28,7 @@ switch (integer value) {
 	[ default: ]	statement
 }
 .TP
-loops:
+\(bu Loops:
 while (condition) statement
 for (expression; condition; expression) statement
 do limits statement
@@ -38,22 +38,22 @@ next
 .LP
 and some syntactic sugar to make programs easier to read and write:
 .TP
-free form input:
+\(bu Free form input:
 multiple statements/line; automatic continuation
 .TP
-comments:
+\(bu Comments:
 # this is a comment
 .TP
-translation of relationals:
+\(bu Translation of relationals:
 >, >=, etc., become .GT., .GE., etc.
 .TP
-return (expression)
+\(bu return (expression)
 returns expression to caller from function
 .TP
-define:
+\(bu Define:
 define name replacement
 .TP
-include:
+\(bu Include:
 include filename
 .PP
 .fi
@@ -94,3 +94,9 @@ Generate the code using UPPERCASE characters. The default is lowercase.
 B. W. Kernighan and P. J. Plauger,
 .IR "Software Tools" ,
 Addison-Wesley, 1976.
+.SH BUGS
+The program has a number of static limits which have not been
+changed. The limits are those of the Vax version from the
+Tenth Edition \s-1UNIX\s+1 system. While they are larger than
+those of the PDP-11 version, they are still small by
+current standards.

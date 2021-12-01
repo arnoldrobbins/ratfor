@@ -1,3 +1,8 @@
+2021-12-01         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* ratfor.1: Improve the presentation some by using bullets.
+	Add a BUGS sections.
+
 2021-11-30         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* ratfor.1: Add OPTIONS section in anticipation of moving

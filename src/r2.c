@@ -35,15 +35,19 @@ outcode(char *xp)
 	int c, c1, j;
 	char *q, *p, *s;
 
-	p = (char *) xp;	/* shut lint up */
+	p = xp;
 	if (cont == 0 && comptr > 0)	/* flush comment if not on continuation */
 		flushcom();
 	while ((c = *p++) != '\0') {
 		c1 = *p;
 		if (isalpha(c) || isdigit(c)) {
+			char *s = p-1;
+
 			if (uppercase)
-				foldup(p-1);
-			pts(p-1);
+				s = foldup(p-1);
+			pts(s);
+			if (s != p-1)
+				free(s);
 			break;
 		}
 		s = NULL;	/* generally set to something like .ge. */
@@ -140,21 +144,28 @@ outcode(char *xp)
 			break;
 		}
 		if (s != NULL) {
+			char *p = s;
+
 			if (uppercase)
-				foldup(s);
-			pts(s);
+				p = foldup(s);
+			pts(p);
+			if (p != s)
+				free(p);
 		}
 	}
 }
 
-void
+char *
 foldup(char *s)		/* convert s to upper case */
 {
-	while (*s) {
+	char *p = strdup(s);
+
+	for (s = p; *s != '\0'; s++) {
 		if (islower(*s))
 			*s = toupper(*s);
-		s++;
 	}
+
+	return p;
 }
 
 void
@@ -212,6 +223,7 @@ void
 outnum(int n)
 {
 	int a;
+
 	if ((a = n/10) != 0)
 		outnum(a);
 	ptc(n%10 + '0');

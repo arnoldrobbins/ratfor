@@ -12,9 +12,9 @@ swcode(void)
 	swlevel++;
 	if (swlevel >= 5)
 		error("Switches nested > 5");
-	swexit[swlevel] = yyval = genlab(1);
+	swexit[swlevel] = yyval.token = genlab(1);
 	outcode("\tI");
-	outnum(yyval);
+	outnum(yyval.token);
 	outcode(" = ");
 	balpar();
 	outdon();
