@@ -1,0 +1,8 @@
+Wed Dec  1 22:47:39 IST 2021
+============================
+
+Change `return(x)' into `return x'
+Go through to make sure there are spaces around all operators
+Make any routines that are only called in one file static
+
+Add tests. Coolest would be to use Software Tools Ratfor code
