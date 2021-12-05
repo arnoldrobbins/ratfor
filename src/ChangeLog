@@ -1,5 +1,14 @@
 2021-12-05         Arnold D. Robbins     <arnold@skeeve.com>
 
+	* r.h (nonblank, foldup, eatup, peek, contcard, defstat,
+	getfname, iniclstat, ptc, pts): Remove declarations.
+	* r1.c (eatup, nonblank): Make static to the file.
+	* r2.c (foldup, ptc, pts, contcard): Ditto.
+	* rio.c (getfname, peek): Ditto.
+	* rlex.c (inclstat, defstat): Ditto.
+
+2021-12-05         Arnold D. Robbins     <arnold@skeeve.com>
+
 	* r.g (sw): Make typed.
 	* r1.c, r2.c, rio.c, rlex.c, rlook.c: Change `return(x);' into
 	`return x;' everywhere. Add more spaces around operators.

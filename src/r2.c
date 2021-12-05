@@ -9,6 +9,10 @@ char	comment[320];
 int	comptr	= 0;
 int	indent	= 0;
 
+static	char	*foldup(char *s);		/* convert s to upper case */
+static	void	ptc(char c);
+static	void	pts(char *s);
+static	void	contcard(void);
 void
 outdon(void)
 {
@@ -155,7 +159,7 @@ outcode(char *xp)
 	}
 }
 
-char *
+static char *
 foldup(char *s)		/* convert s to upper case */
 {
 	char *p = strdup(s);
@@ -168,7 +172,7 @@ foldup(char *s)		/* convert s to upper case */
 	return p;
 }
 
-void
+static void
 ptc(char c)
 {
 	if (outp > 71)
@@ -176,7 +180,7 @@ ptc(char c)
 	outbuf[outp++] = c;
 }
 
-void
+static void
 pts(char *s)
 {
 	if (strlen(s)+outp > 71)
@@ -185,7 +189,7 @@ pts(char *s)
 		ptc(*s++);
 }
 
-void
+static void
 contcard(void)
 {
 	int n;

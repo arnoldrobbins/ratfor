@@ -53,6 +53,9 @@ bool	hollerith	= false;	/* convert "..." to 27H... if on */
 bool	uppercase	= false;	/* produce output in upper case (except for "...") */
 bool	f77		= false;	/* output in fortran 77 (if-then-else-endif) */
 
+static	void	inclstat(void);
+static	void	defstat(void);
+
 static void
 usage(const char *name)
 {
@@ -132,7 +135,7 @@ cant(char *s)
 	exit(1);
 }
 
-void
+static void
 inclstat(void)
 {
 	int c;
@@ -205,7 +208,7 @@ yyerror(const char *p)
 }
 
 
-void
+static void
 defstat(void)
 {
 	int c, i, val, t, nlp;

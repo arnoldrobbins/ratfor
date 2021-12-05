@@ -16,6 +16,9 @@ int	brkused[50];	/* loop contains BREAK or NEXT */
 int	forptr	= 0;
 char	*forstk[50];
 
+static	int	eatup(void);
+static	bool	nonblank(char *s);
+
 void
 repcode(void)
 {
@@ -176,7 +179,7 @@ gokcode(char *p1)
 	outdon();
 }
 
-int
+static int
 eatup(void)
 {
 	int t, lpar;
@@ -395,7 +398,7 @@ nextcode(void)
 	transfer = 1;
 }
 
-bool
+static bool
 nonblank(char *s)
 {
 	int c;

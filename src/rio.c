@@ -3,6 +3,8 @@
 char	ibuf[BUFSIZE];
 char	*ip = ibuf;
 
+static	void	getfname(void);
+static	int	peek(char *p, char c1);
 
 int
 gtok(char *s)	/* get token into s */
@@ -154,7 +156,7 @@ gnbtok(char *s)
 	return c;
 }
 
-void
+static void
 getfname(void)
 {
 	while (gtok(fcname) == ' ')
@@ -163,7 +165,7 @@ getfname(void)
 	putbak(' ');
 }
 
-int
+static int
 peek(char *p, char c1)
 {
 	int c;

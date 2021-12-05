@@ -1,7 +1,6 @@
-Sun 05 Dec 2021 10:17:44 AM IST
+Sun Dec  5 19:54:51 IST 2021
 ============================
 
-Make any routines that are only called in one file static
 See if any routines can be converted to return bool.
 Look for `*p' as a condition and change to `*p != '\0''.
 
@@ -12,3 +11,4 @@ DONE:
 
 Change `return(x)' into `return x'
 Go through to make sure there are spaces around all operators
+Make any routines that are only called in one file static
