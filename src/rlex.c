@@ -1,4 +1,4 @@
-# include "r.h"
+#include "r.h"
 
 char *keyword [] = {
 	"do",
@@ -47,7 +47,7 @@ FILE	*outfil	= NULL;
 FILE	*infile[10];
 int	linect[10];
 
-int	contfld	= CONTFLD;	/* place to put continuation char */
+int	contfld		= CONTFLD;	/* place to put continuation char */
 bool	printcom	= false;	/* print comments if on */
 bool	hollerith	= false;	/* convert "..." to 27H... if on */
 bool	uppercase	= false;	/* produce output in upper case (except for "...") */
@@ -105,10 +105,8 @@ main(int argc, char **argv)
 			break;
 		default:
 			usage(argv[0]);
-			;
+			break;
 		}
-		//argc--;
-		//argv++;
 	}
 
 	svargc = argc - (optind - 1);
@@ -144,7 +142,7 @@ inclstat(void)
 	while ((c = getchr()) == ' ' || c == '\t')
 		continue;
 	if (c == '(') {
-		for (ps=fname; (*ps=getchr()) != ')'; ps++)
+		for (ps = fname; (*ps=getchr()) != ')'; ps++)
 			continue;
 		*ps = '\0';
 	} else if (c == '"' || c == '\'') {
@@ -153,7 +151,7 @@ inclstat(void)
 		*ps = '\0';
 	} else {
 		putbak(c);
-		for (ps = fname; (*ps=getchr()) != ' ' && *ps != '\t' && *ps != '\n' && *ps != ';'; ps++)
+		for (ps = fname; (*ps = getchr()) != ' ' && *ps != '\t' && *ps != '\n' && *ps != ';'; ps++)
 			continue;
 		*ps = '\0';
 	}
@@ -178,7 +176,7 @@ yylex(void)
 			continue;
 		yylval.token = c;
 		if (c == ';' || c == '{' || c == '}')
-			return(c);
+			return c;
 		if (c == EOF)
 			return 0;
 		yylval.strval = str;
@@ -258,7 +256,7 @@ defstat(void)
 		i--;
 	}
 	for (; i > 0; i--)
-		if (str[i-1] != ' ' && str[i-1] != '\t')
+		if (str[i - 1] != ' ' && str[i - 1] != '\t')
 			break;
 	str[i] = '\0';
 	install(str, &str[val], 0);

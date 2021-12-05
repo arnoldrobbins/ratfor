@@ -1,8 +1,14 @@
-Wed Dec  1 22:47:39 IST 2021
+Sun 05 Dec 2021 10:17:44 AM IST
 ============================
+
+Make any routines that are only called in one file static
+See if any routines can be converted to return bool.
+Look for `*p' as a condition and change to `*p != '\0''.
+
+Add tests. Coolest would be to use Software Tools Ratfor code
+
+DONE:
+=====
 
 Change `return(x)' into `return x'
 Go through to make sure there are spaces around all operators
-Make any routines that are only called in one file static
-
-Add tests. Coolest would be to use Software Tools Ratfor code

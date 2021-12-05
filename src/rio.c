@@ -26,13 +26,13 @@ gtok(char *s)	/* get token into s */
 				}
 				getfname();	/* recursive gtok */
 			}
-			for (p=s; *p; p++)
+			for (p = s; *p; p++)
 				if (isupper(*p))
 					*p = tolower(*p);
-			for (p=s; *p; p++)
+			for (p = s; *p; p++)
 				if (!isdigit(*p))
-					return(LET);
-			return(DIG);
+					return LET;
+			return DIG;
 		}
 		switch(c) {
 		case 0:
@@ -54,7 +54,7 @@ gtok(char *s)	/* get token into s */
 				curfile[0] = *svargv;
 				continue;
 			}
-			return(EOF);	/* real eof */
+			return EOF;	/* real eof */
 		case ' ':
 		case '\t':
 			while ((c = getchr()) == ' ' || c == '\t')
@@ -66,11 +66,11 @@ gtok(char *s)	/* get token into s */
 			if (c != '\n') {
 				putbak(c);
 				*p = '\0';
-				return(' ');
+				return ' ';
 			} else {
 				*s = '\n';
-				*(s+1) = '\0';
-				return(*s);
+				*(s + 1) = '\0';
+				return *s;
 			}
 		case '_':
 			while ((c = getchr()) == ' ' || c == '\t')
@@ -84,14 +84,14 @@ gtok(char *s)	/* get token into s */
 			continue;
 		case '[':
 			*p = '\0';
-			return('{');
+			return '{';
 		case ']':
 			*p = '\0';
-			return('}');
+			return '}';
 		case '$':
 		case '\\':
 			if ((*p = getchr()) == '(' || *p == ')') {
-				putbak(*p=='(' ? '{' : '}');
+				putbak(*p == '(' ? '{' : '}');
 				continue;
 			}
 			if (*p == '"' || *p == '\'')
@@ -99,15 +99,15 @@ gtok(char *s)	/* get token into s */
 			else
 				putbak(*p);
 			*p = '\0';
-			return('$');
+			return '$';
 		case COMMENT:
 			comment[comptr++] = 'c';
 			while ((comment[comptr++] = getchr()) != '\n')
 				;
 			flushcom();
 			*s = '\n';
-			*(s+1) = '\0';
-			return(*s);
+			*(s + 1) = '\0';
+			return *s;
 		case '"':
 		case '\'':
 			for (; (*p = getchr()) != c; p++) {
@@ -121,25 +121,25 @@ gtok(char *s)	/* get token into s */
 			}
 			*p++ = c;
 			*p = '\0';
-			return(QUOTE);
+			return QUOTE;
 		case '%':
 			while ((*p = getchr()) != '\n')
 				p++;
 			putbak(*p);
 			*p = '\0';
-			return('%');
+			return '%';
 		case '>': case '<': case '=': case '!': case '^':
-			return(peek(p, '='));
+			return peek(p, '=');
 		case '&':
-			return(peek(p, '&'));
+			return peek(p, '&');
 		case '|':
-			return(peek(p, '|'));
+			return peek(p, '|');
 		default:
 			if (!isprint(c))
 				continue;
 		case '\n':
 			*p = '\0';
-			return(*s);
+			return *s;
 		}
 	}
 }
@@ -151,7 +151,7 @@ gnbtok(char *s)
 
 	while ((c = gtok(s)) == ' ' || c == '\t')
 		;
-	return(c);
+	return c;
 }
 
 void
@@ -168,13 +168,13 @@ peek(char *p, char c1)
 {
 	int c;
 
-	c = *(p-1);
+	c = *(p - 1);
 	if ((*p = getchr()) == c1)
 		p++;
 	else
 		putbak(*p);
 	*p = '\0';
-	return(c);
+	return c;
 }
 
 void
@@ -200,11 +200,11 @@ getchr(void)
 	int c;
 
 	if (ip > ibuf)
-		return(*--ip);
+		return *--ip;
 	c = getc(infile[infptr]);
 	if (c == '\n')
 		linect[infptr]++;
 	if (c == EOF)
-		return(0);
-	return(c);
+		return 0;
+	return c;
 }

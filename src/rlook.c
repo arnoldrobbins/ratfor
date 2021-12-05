@@ -26,9 +26,9 @@ lookup(char *str)
 	hshval %= HSHSIZ;
 	for (np = hshtab[hshval]; np != NULL; np = np->next) {
 		if (strcmp(str, np->name) == 0)
-			return(np);
+			return np;
 	}
-	return(&nodef);
+	return &nodef;
 }
 
 char *
@@ -43,9 +43,9 @@ install(char *nam, char *val, int tran)
 		np->ydef = tran;
 		np->next = hshtab[hshval];
 		hshtab[hshval] = np;
-		return(np->def);
+		return np->def;
 	}
 	free(np->def);
 	np->def = strdup(val);
-	return(np->def);
+	return np->def;
 }

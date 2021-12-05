@@ -41,12 +41,12 @@ outcode(char *xp)
 	while ((c = *p++) != '\0') {
 		c1 = *p;
 		if (isalpha(c) || isdigit(c)) {
-			char *s = p-1;
+			char *s = p - 1;
 
 			if (uppercase)
-				s = foldup(p-1);
+				s = foldup(p - 1);
 			pts(s);
-			if (s != p-1)
+			if (s != p - 1)
 				free(s);
 			break;
 		}
@@ -78,7 +78,7 @@ outcode(char *xp)
 			break;
 		case '$':
 		case '\\':
-			if (strlen(p-1)+outp > 71)
+			if (strlen(p - 1) + outp > 71)
 				contcard();
 			if (c1 == '"' || c1 == '\'') {
 				ptc(c1);
@@ -198,7 +198,7 @@ contcard(void)
 	}
 	for (outp = 0; outp < n; outbuf[outp++] = ' ')
 		continue;
-	outbuf[contfld-1] = contchar;
+	outbuf[contfld - 1] = contchar;
 	cont++;
 	if (cont > 19)
 		error("more than 19 continuation cards");

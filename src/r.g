@@ -23,7 +23,7 @@
 %type <token>	SWITCH CASE DEFAULT
 %type <strval>	GOK DIGITS 
 
-%type <token>	if ifelse switch while for repeat do fullcase
+%type <token>	if ifelse switch while for repeat do fullcase sw
 %%
 
 statl	: statl  stat

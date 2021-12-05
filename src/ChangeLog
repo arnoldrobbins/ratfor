@@ -1,3 +1,9 @@
+2021-12-05         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* r.g (sw): Make typed.
+	* r1.c, r2.c, rio.c, rlex.c, rlook.c: Change `return(x);' into
+	`return x;' everywhere. Add more spaces around operators.
+
 2021-12-01         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* r.g: Use %union for a real type for YYSTYPE. Add %type statements

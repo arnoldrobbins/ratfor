@@ -25,7 +25,7 @@ repcode(void)
 	yyval.token = genlab(3);
 	indent++;
 	outcont(yyval.token);
-	brkstk[++brkptr] = yyval.token+1;
+	brkstk[++brkptr] = yyval.token + 1;
 	typestk[brkptr] = REPEAT;
 	brkused[brkptr] = 0;
 }
@@ -33,7 +33,7 @@ repcode(void)
 void
 untils(int p1, int un)
 {
-	outnum(p1+1);
+	outnum(p1 + 1);
 	outtab();
 	if (un > 0) {
 		outcode("if(.not.");
@@ -44,7 +44,7 @@ untils(int p1, int un)
 	outgoto(p1);
 	indent--;
 	if (wasbreak)
-		outcont(p1+2);
+		outcont(p1 + 2);
 	brkptr--;
 }
 
@@ -76,7 +76,7 @@ elsecode(int p1)
 		outcode("else");
 		outdon();
 	} else {
-		outgoto(p1+1);
+		outgoto(p1 + 1);
 		indent--;
 		putcom("else");
 		indent++;
@@ -106,7 +106,7 @@ whilecode(void)
 	outcode("if(.not.");
 	balpar();
 	outcode(")");
-	outgoto(yyval.token+1);
+	outgoto(yyval.token + 1);
 	indent++;
 }
 
@@ -116,7 +116,7 @@ whilestat(int p1)
 	outgoto(p1);
 	indent--;
 	putcom("endwhile");
-	outcont(p1+1);
+	outcont(p1 + 1);
 	brkptr--;
 }
 
@@ -163,7 +163,7 @@ int
 genlab(int n)
 {
 	labval += n;
-	return(labval - n);
+	return labval - n;
 }
 
 void
@@ -202,16 +202,16 @@ eatup(void)
 			lpar--;
 			if (lpar < 0) {
 				error("missing left paren");
-				return(1);
+				return 1;
 			}
 		}
 		outcode(scrat);
 	} while (lpar >= 0);
 	if (lpar > 0) {
 		error("missing right paren");
-		return(1);
+		return 1;
 	}
-	return(0);
+	return 0;
 }
 
 void
@@ -224,7 +224,7 @@ forcode(void)
 	outcont(0);
 	putcom("for");
 	yyval.token = genlab(3);
-	brkstk[++brkptr] = yyval.token+1;
+	brkstk[++brkptr] = yyval.token + 1;
 	typestk[brkptr] = FOR;
 	brkused[brkptr] = 0;
 	forstk[forptr++] = malloc(1);
@@ -265,7 +265,7 @@ forcode(void)
 				outcode(scrat);
 		}
 		outcode("))");
-		outgoto(yyval.token+2);
+		outgoto(yyval.token + 2);
 		if (lpar < 0)
 			error("invalid FOR clause");
 	}
@@ -280,7 +280,7 @@ forcode(void)
 				ps++;
 	}
 	*ps = '\0';
-	qs = forstk[forptr-1] = malloc((unsigned)(ps-scrat+1));
+	qs = forstk[forptr - 1] = malloc((unsigned)(ps - scrat + 1));
 	ps = scrat;
 	while (*qs++ = *ps++)
 		;
@@ -293,7 +293,7 @@ forstat(int p1)
 	char *bp, *q;
 	bp = forstk[--forptr];
 	if (wasnext)
-		outnum(p1+1);
+		outnum(p1 + 1);
 	if (nonblank(bp)){
 		outtab();
 		outcode(bp);
@@ -353,7 +353,7 @@ dostat(int p1)
 	outcont(p1);
 	indent--;
 	if (wasbreak)
-		outcont(p1+1);
+		outcont(p1 + 1);
 	brkptr--;
 }
 
@@ -370,7 +370,7 @@ breakcode(void)
 	if (brkptr-level < 0)
 		error("illegal BREAK");
 	else {
-		outgoto(brkstk[brkptr-level]+1);
+		outgoto(brkstk[brkptr-level] + 1);
 		brkused[brkptr-level] |= 1;
 	}
 	transfer = 1;
