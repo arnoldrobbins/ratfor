@@ -28,10 +28,10 @@ gtok(char *s)	/* get token into s */
 				}
 				getfname();	/* recursive gtok */
 			}
-			for (p = s; *p; p++)
+			for (p = s; *p != '\0'; p++)
 				if (isupper(*p))
 					*p = tolower(*p);
-			for (p = s; *p; p++)
+			for (p = s; *p != '\0'; p++)
 				if (!isdigit(*p))
 					return LET;
 			return DIG;

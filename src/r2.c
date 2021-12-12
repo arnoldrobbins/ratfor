@@ -59,7 +59,7 @@ outcode(char *xp)
 		case '"':
 		case '\'':
 			j = 0;
-			for (q = p; *q; q++) {
+			for (q = p; *q != '\0'; q++) {
 				if (*q == '\\')
 					q++;
 				j++;
@@ -88,12 +88,12 @@ outcode(char *xp)
 				ptc(c1);
 				p++;
 			} else
-				for (p--; *p; p++)
+				for (p--; *p != '\0'; p++)
 					ptc(*p);
 			break;
 		case '%':
 			outp = 0;
-			while (*p)
+			while (*p != '\0')
 				ptc(*p++);
 			break;
 		case '>':
@@ -185,7 +185,7 @@ pts(char *s)
 {
 	if (strlen(s)+outp > 71)
 		contcard();
-	while (*s)
+	while (*s != '\0')
 		ptc(*s++);
 }
 

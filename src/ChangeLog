@@ -1,3 +1,10 @@
+2021-12-12         Arnold D. Robbins     <arnold@skeeve.com>
+
+	* r1.c (forcode): Use `*p != '\0'' in conditions. Add check
+	for EOF, to fix the bug in the BUGS files.
+	* r2.c (outcode, pts): Use `*p != '\0'' in conditions.
+	* rio.c (gtok): Ditto.
+
 2021-12-05         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* r.h (nonblank, foldup, eatup, peek, contcard, defstat,

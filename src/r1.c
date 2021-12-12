@@ -279,8 +279,12 @@ forcode(void)
 		else if (t == ')')
 			lpar--;
 		if (lpar >= 0 && t != '\n')
-			while (*ps)
+			while (*ps != '\0')
 				ps++;
+		if (t == EOF) {
+			error("EOF encountered in FOR clause");
+			exit(1);
+		}
 	}
 	*ps = '\0';
 	qs = forstk[forptr - 1] = malloc((unsigned)(ps - scrat + 1));
