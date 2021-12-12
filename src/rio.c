@@ -190,7 +190,7 @@ pbstr(char *str)
 	--p;
 	if (ip >= &ibuf[BUFSIZE]) {
 		error("pushback overflow");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	while (p > str)
 		putbak(*--p);

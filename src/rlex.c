@@ -132,7 +132,7 @@ cant(char *s)
 	linect[infptr] = 0;
 	curfile[infptr] = s;
 	error("can't open");
-	exit(1);
+	exit(EXIT_FAILURE);
 }
 
 static void

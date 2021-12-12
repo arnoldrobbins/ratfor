@@ -9,6 +9,12 @@
 
 	* old.a: Removed. That's what we have Git for.
 
+	Unrelated:
+
+	* r1.c (forcode): Use exit(EXIT_FAILURE) instead of exit(1).
+	* rio.c (pbstr): Ditto.
+	* rlex.c (cant): Ditto.
+
 2021-12-05         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* r.h (nonblank, foldup, eatup, peek, contcard, defstat,

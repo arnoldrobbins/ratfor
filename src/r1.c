@@ -283,7 +283,7 @@ forcode(void)
 				ps++;
 		if (t == EOF) {
 			error("EOF encountered in FOR clause");
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
 	}
 	*ps = '\0';
