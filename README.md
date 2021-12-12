@@ -4,7 +4,8 @@ This repository tracks the history of the original C version of
 the Bell Labs `ratfor` translator written by Brian Kernighan.
 It include the original versions from the Sixth, Seventh, Eighth
 and Tenth Edition UNIX(R) systems.  There is a separate branch with
-each version of the original code.
+each version of the original code. (The Ninth Edition sources in
+the TUHS archives did not have ratfor.)
 
 In addition, starting with the version from the Tenth Edition, I have
 modernized the code to compile and run on a current day GNU/Linux
@@ -39,4 +40,4 @@ Arnold Robbins
 
 #### Last Updated
 
-Wed Dec  1 07:52:14 IST 2021
+Sun Dec 12 20:44:40 IST 2021
