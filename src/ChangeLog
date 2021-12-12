@@ -5,6 +5,10 @@
 	* r2.c (outcode, pts): Use `*p != '\0'' in conditions.
 	* rio.c (gtok): Ditto.
 
+	Unrelated:
+
+	* old.a: Removed. That's what we have Git for.
+
 2021-12-05         Arnold D. Robbins     <arnold@skeeve.com>
 
 	* r.h (nonblank, foldup, eatup, peek, contcard, defstat,
